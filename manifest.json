@@ -1,0 +1,11 @@
+{
+	"id": "quicknote",
+	"name": "Quick note from Obsidian app icon",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "Create New note from right-clicking app icon.",
+	"author": "James Greenhalgh MBCS",
+	"authorUrl": "https://jamesgreenblue.com",
+	"fundingUrl": "",
+	"isDesktopOnly": true
+}
