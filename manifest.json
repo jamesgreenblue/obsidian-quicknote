@@ -1,9 +1,9 @@
 {
 	"id": "quicknote",
-	"name": "Quick note (Obsidian command and app icon)",
-	"version": "0.1.0",
+	"name": "Quick note",
+	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Create quick note on command or by right-clicking app icon.",
+	"description": "Create a quick note in a floating window (on command or by right-clicking the Obsidian app icon)",
 	"author": "James Greenhalgh MBCS",
 	"authorUrl": "https://jamesgreenblue.com",
 	"fundingUrl": "",
