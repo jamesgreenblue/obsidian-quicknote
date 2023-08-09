@@ -29,9 +29,7 @@ class QuickNotePlugin extends obsidian.Plugin {
       name: "New quick note",
       icon: "popup-open",
       callback: async () => {
-        let noteFilePath = this.generateNewFilePath();
-        const noteFileTitle = obsidian.moment().format(this.settings.quickNoteTitle);
-        let fileName = `${noteFilePath}/${noteFileTitle}.md`
+        let fileName = this.generateNewFilePath();
         let leafWindow = this.app.workspace.getLeaf("window");
         const newFile = await this.app.vault.create(fileName, "", {});
         await leafWindow.openFile(newFile);
@@ -45,7 +43,18 @@ class QuickNotePlugin extends obsidian.Plugin {
     let activeFile = this.app.workspace.getActiveFile();
     let activePath = !!activeFile ? activeFile.path : "";
     const newFileParent = this.app.fileManager.getNewFileParent(activePath);
-    return newFileParent.path;
+    let noteFilePath = newFileParent.path;
+
+    const noteFileTitle = obsidian.moment().format(this.settings.quickNoteTitle || DEFAULT_SETTINGS.quickNoteTitle);
+    let existingQuickNotes = newFileParent.children.filter((n) => n.name.startsWith(noteFileTitle)).map((n) => n.name);
+    let fileName = "";
+    for (let i = 0; i <= existingQuickNotes.length; i++) {
+      fileName = `${noteFileTitle}${i > 0 ? " " + i : ""}.md`;
+      if (!existingQuickNotes.includes(fileName)) {
+        break;
+      }
+    }
+    return `${noteFilePath}/${fileName}`;
   }
 
   async loadSettings() {
@@ -62,7 +71,7 @@ class QuickNotePlugin extends obsidian.Plugin {
 }
 
 var DEFAULT_SETTINGS = {
-  quickNoteTitle: "YYYY-MM-DD [(]HH-mm-ss[) Quick note]"
+  quickNoteTitle: "YYYY-MM-DD [Quick note]"
 };
 
 var SettingTab = class extends obsidian.PluginSettingTab {
