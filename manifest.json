@@ -1,6 +1,6 @@
 {
 	"id": "quicknote",
-	"name": "Quick note command and app icon",
+	"name": "Quick note (Obsidian command and app icon)",
 	"version": "0.1.0",
 	"minAppVersion": "0.15.0",
 	"description": "Create quick note on command or by right-clicking app icon.",

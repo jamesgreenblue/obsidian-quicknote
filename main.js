@@ -18,6 +18,7 @@ const dockMenu = Menu.buildFromTemplate([
 class QuickNotePlugin extends obsidian.Plugin {
   async onload() {
     log(LOG_LOADING);
+    await this.loadSettings();
 
     if (process.platform === 'darwin') {
         app.dock.setMenu(dockMenu)
@@ -28,26 +29,56 @@ class QuickNotePlugin extends obsidian.Plugin {
       name: "New quick note",
       icon: "popup-open",
       callback: async () => {
-        let fileName = this.generateNewFileFolderName();
+        let noteFilePath = this.generateNewFilePath();
+        const noteFileTitle = obsidian.moment().format(this.settings.quickNoteTitle);
+        let fileName = `${noteFilePath}/${noteFileTitle}.md`
         let leafWindow = this.app.workspace.getLeaf("window");
         const newFile = await this.app.vault.create(fileName, "", {});
         await leafWindow.openFile(newFile);
       }
     });
+
+    this.addSettingTab(new SettingTab(this.app, this));
   }
 
-  generateNewFileFolderName() {
+  generateNewFilePath() {
     let activeFile = this.app.workspace.getActiveFile();
     let activePath = !!activeFile ? activeFile.path : "";
     const newFileParent = this.app.fileManager.getNewFileParent(activePath);
-    let noteFilePath = newFileParent.path;
-    const noteName = obsidian.moment().format("YYYY-MM-DD [(]HH-mm-ss[) Quick note]");
-    return `${noteFilePath}/${noteName}.md`;
+    return newFileParent.path;
+  }
+
+  async loadSettings() {
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+  }
+  async saveSettings() {
+    await this.saveData(this.settings);
   }
 
   onunload() {
     log(LOG_CLEANUP);
   }
-
+  
 }
+
+var DEFAULT_SETTINGS = {
+  quickNoteTitle: "YYYY-MM-DD [(]HH-mm-ss[) Quick note]"
+};
+
+var SettingTab = class extends obsidian.PluginSettingTab {
+  display() {
+    const { containerEl } = this;
+    containerEl.empty();
+    containerEl.createEl("h1", {
+      text: `${this.plugin.manifest.name} ${this.plugin.manifest.version}`
+    });
+    new obsidian.Setting(this.containerEl).setName("Quick note title").setDesc("See Moment.js documentation for instructions").addText((text) => {
+      text.setPlaceholder(DEFAULT_SETTINGS.quickNoteTitle).setValue(this.plugin.settings.quickNoteTitle).onChange((newTitle) => {
+        this.plugin.settings.quickNoteTitle = newTitle;
+        this.plugin.saveSettings();
+      });
+    });
+  }
+};
+
 module.exports = QuickNotePlugin;
