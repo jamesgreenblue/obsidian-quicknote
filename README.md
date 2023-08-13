@@ -4,9 +4,13 @@
 Create a new quick note in a floating [Obsidian](https://obsidian.md) window (on command or by right-clicking the Obsidian app icon). This started from a [feature request](https://forum.obsidian.md/t/create-new-note-from-right-clicking-app-icon/63210) in the Obsidian forum.
 
 # TODO
-- [ ] Add a setting for changing the quick note title
 - [ ] Windows support (docs: [Windows Taskbar JumpList](https://www.electronjs.org/docs/latest/tutorial/windows-taskbar))
 - [ ] Linux support (docs: [Linux Desktop Launcher Actions](https://www.electronjs.org/docs/latest/tutorial/linux-desktop-actions))
+- [x] Add a setting for changing the quick note title
+
+# Known issues
+
+- [ ] [Creating new note fails when obsidian is running but is minimised so has no available windows](https://forum.obsidian.md/t/macos-creating-new-note-fails-when-obsidian-is-running-but-minimized-closed/51597)
 
 # Contributing
 
