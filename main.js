@@ -1,4 +1,4 @@
-// v0.1.0 https://github.com/jamesgreenblue/obsidian-quicknote is licensed under the MIT License
+// https://github.com/jamesgreenblue/obsidian-quicknote is licensed under the MIT License
 
 const LOG_PREFIX = "obsidian-quicknote",
   LOG_LOADING = "hello",
@@ -11,7 +11,7 @@ const obsidian = require("obsidian"),
 const dockMenu = Menu.buildFromTemplate([
 {
     label: 'New quick note',
-    click () { this.app.commands.executeCommandById('quicknote:jgb-create-quick-note'); }
+    click () { this.app.commands.executeCommandById('quicknote:create-quick-note'); }
 }
 ])
 
@@ -25,7 +25,7 @@ class QuickNotePlugin extends obsidian.Plugin {
     }
 
     this.addCommand({
-      id: "jgb-create-quick-note",
+      id: "create-quick-note",
       name: "New quick note",
       icon: "popup-open",
       callback: async () => {
@@ -70,6 +70,11 @@ class QuickNotePlugin extends obsidian.Plugin {
   
 }
 
+htmlToFragment = (html) =>
+document
+  .createRange()
+  .createContextualFragment((html ?? "").replace(/\s+/g, " "));
+
 var DEFAULT_SETTINGS = {
   quickNoteTitle: "YYYY-MM-DD [Quick note]"
 };
@@ -78,10 +83,7 @@ var SettingTab = class extends obsidian.PluginSettingTab {
   display() {
     const { containerEl } = this;
     containerEl.empty();
-    containerEl.createEl("h1", {
-      text: `${this.plugin.manifest.name} ${this.plugin.manifest.version}`
-    });
-    new obsidian.Setting(this.containerEl).setName("Quick note title").setDesc("See Moment.js documentation for instructions").addText((text) => {
+    new obsidian.Setting(this.containerEl).setName("Quick note title").setDesc(htmlToFragment(`See Moment.js <a href="https://momentjs.com/docs/#/displaying/format/" target="_blank" rel="noopener">Format docs</a> for options`)).addText((text) => {
       text.setPlaceholder(DEFAULT_SETTINGS.quickNoteTitle).setValue(this.plugin.settings.quickNoteTitle).onChange((newTitle) => {
         this.plugin.settings.quickNoteTitle = newTitle;
         this.plugin.saveSettings();
